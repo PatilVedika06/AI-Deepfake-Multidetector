@@ -29,7 +29,8 @@ jobs:
 
       - name: Run Automated Tests
         run: python -m pytest -v
-              - name: Generate Build Report
+
+      - name: Generate Build Report
         if: always()
         run: |
           mkdir -p reports
@@ -45,12 +46,3 @@ jobs:
         with:
           name: CI-Build-Report
           path: reports/build-report.md
-          mkdir -p reports
-          pytest tests/ --junitxml=reports/test-report.xml
-
-      - name: Generate Build Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-report
-          path: reports/
