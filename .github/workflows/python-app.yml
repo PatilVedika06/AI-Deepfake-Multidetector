@@ -28,7 +28,23 @@ jobs:
         run: python -m compileall -q .
 
       - name: Run Automated Tests
+        run: python -m pytest -v
+              - name: Generate Build Report
+        if: always()
         run: |
+          mkdir -p reports
+          echo "# CI Build Report" > reports/build-report.md
+          echo "Repository: $GITHUB_REPOSITORY" >> reports/build-report.md
+          echo "Branch: $GITHUB_REF_NAME" >> reports/build-report.md
+          echo "Commit: $GITHUB_SHA" >> reports/build-report.md
+          echo "Status: ${{ job.status }}" >> reports/build-report.md
+
+      - name: Upload Build Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: CI-Build-Report
+          path: reports/build-report.md
           mkdir -p reports
           pytest tests/ --junitxml=reports/test-report.xml
 
